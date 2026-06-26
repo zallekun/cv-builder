@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS CV Builder</title>
+    <meta name="description" content="Buat CV ATS-friendly profesional secara gratis. Isi form, preview langsung, dan download PDF.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+    <!-- ====================== TOP BAR ====================== -->
+    <div class="topbar no-print">
+        <div class="topbar-brand">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10,9 9,9 8,9"/>
+            </svg>
+            ATS CV Builder
+        </div>
+        <div class="topbar-actions">
+            <span class="save-indicator" id="saveIndicator">Tersimpan otomatis</span>
+            <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="id">Bahasa Indonesia</option>
+            </select>
+            <button class="btn btn-primary" onclick="handlePrint()">Generate PDF</button>
+            <button class="btn btn-ghost" onclick="showResetModal()">Reset</button>
+        </div>
+        <!-- Hamburger Button (Mobile only) -->
+        <button class="burger-menu-btn no-print" id="burgerMenuBtn" onclick="toggleBurgerMenu()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <!-- Mobile Dropdown Menu -->
+        <div class="topbar-menu-dropdown no-print" id="topbarMenuDropdown">
+            <div class="menu-item">
+                <span>Bahasa</span>
+                <select class="lang-select" id="langSelectDropdown" onchange="changeLanguage(this.value); toggleBurgerMenu(false);">
+                    <option value="en">English</option>
+                    <option value="id">Bahasa Indonesia</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="handlePrint(); toggleBurgerMenu(false);">Generate PDF</button>
+            <button class="btn btn-ghost" onclick="showResetModal(); toggleBurgerMenu(false);">Reset</button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Tabs -->
+    <div class="mobile-tabs no-print">
+        <button class="active" id="btnTabEdit" onclick="switchTab('edit')">Tulis CV</button>
+        <button id="btnTabPreview" onclick="switchTab('preview')">Lihat Preview</button>
+    </div>
+
+    <div class="panels">
+        <!-- ====================== EDITOR PANEL ====================== -->
+        <div class="editor-panel no-print" id="editorPanel">
+            <!-- Sections will be rendered by JS -->
+        </div>
+
+        <!-- ====================== PREVIEW CONTAINER ====================== -->
+        <div class="preview-container">
+            <div class="preview-panel" id="previewPanel">
+                <!-- Pages will be rendered here dynamically -->
+            </div>
+            <!-- Zoom Controls -->
+            <div class="zoom-controls no-print">
+                <button onclick="zoomOut()" title="Zoom Out">—</button>
+                <span id="zoomPercent" onclick="resetZoom()" style="cursor: pointer;" title="Reset Zoom">100%</span>
+                <button onclick="zoomIn()" title="Zoom In">+</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Confirmation Modal -->
+<div class="modal-overlay" id="resetModal">
+    <div class="modal">
+        <h3>Reset Semua Data?</h3>
+        <p>Semua data CV yang telah kamu isi akan dihapus dan tidak bisa dikembalikan.</p>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" onclick="hideResetModal()">Batal</button>
+            <button class="btn btn-danger" onclick="confirmReset()">Ya, Reset</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
