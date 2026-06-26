@@ -5,19 +5,65 @@
 const DEFAULT_DATA = {
     language: 'id',
     header: {
-        name: '',
-        email: '',
-        phone: '',
-        website: '',
-        address: ''
+        name: 'Nama Kamu',
+        email: 'email@example.com',
+        phone: '+62 812-3456-7890',
+        website: 'linkedin.com/in/username',
+        address: 'Jakarta, Indonesia'
     },
-    summary: '',
-    education: [],
-    workExperience: [],
-    relatedExperiences: [],
-    certifications: [],
-    awards: [],
-    skills: []
+    summary: 'Developer Full-Stack yang berdedikasi tinggi dengan pengalaman lebih dari 3 tahun dalam membangun aplikasi web yang skalabel dan efisien. Memiliki keahlian mendalam pada JavaScript, Node.js, dan React, serta berpengalaman dalam merancang arsitektur basis data yang optimal. Berkomitmen untuk terus mempelajari teknologi terbaru dan berkolaborasi dalam tim untuk menghadirkan solusi teknologi terbaik bagi bisnis.',
+    education: [
+        {
+            institution: 'Universitas Indonesia',
+            location: 'Depok, Jawa Barat',
+            degree: 'Sarjana Ilmu Komputer',
+            date: '2019 - 2023',
+            bullets: [
+                'Lulus dengan predikat Cum Laude (IPK 3.85).',
+                'Mengembangkan sistem manajemen perpustakaan kampus berbasis web sebagai proyek akhir.',
+                'Aktif sebagai Asisten Dosen untuk mata kuliah Struktur Data dan Algoritma.'
+            ]
+        }
+    ],
+    workExperience: [
+        {
+            company: 'Techindo Solusi Digital',
+            location: 'Jakarta',
+            role: 'Full-Stack Developer',
+            date: 'Jan 2024 - Sekarang',
+            bullets: [
+                'Membangun dan memelihara aplikasi e-commerce menggunakan React.js dan Node.js, meningkatkan retensi pengguna sebesar 15%.',
+                'Mengoptimalkan kueri basis data PostgreSQL yang mempercepat waktu pemuatan halaman hingga 30%.',
+                'Memimpin tim kecil beranggotakan 4 pengembang dalam merancang sistem integrasi pembayaran pihak ketiga.'
+            ]
+        }
+    ],
+    relatedExperiences: [
+        {
+            company: 'Proyek Open Source - Admin Dashboard',
+            location: 'Remote',
+            role: 'Kontributor Utama',
+            date: 'Jun 2023 - Des 2023',
+            bullets: [
+                'Mengembangkan komponen UI reusable yang ramah aksesibilitas menggunakan React dan Tailwind CSS.',
+                'Menulis dokumentasi API yang lengkap dan tutorial integrasi bagi pengguna baru repositori.'
+            ]
+        }
+    ],
+    certifications: [
+        { name: 'AWS Certified Solutions Architect - Associate', issuer: 'Amazon Web Services', date: 'Mar 2025' },
+        { name: 'Professional Cloud Developer', issuer: 'Google Cloud', date: 'Jul 2024' }
+    ],
+    awards: [
+        'Juara 1 Hackathon Nasional bidang Inovasi FinTech',
+        'Lulusan Terbaik Fakultas Ilmu Komputer, Universitas Indonesia'
+    ],
+    skills: [
+        { category: 'Pemrograman', items: 'JavaScript, TypeScript, Python, SQL, HTML, CSS' },
+        { category: 'Framework & Tools', items: 'React.js, Node.js, Express, PostgreSQL, Git, Docker' },
+        { category: 'Desain & Perangkat Lunak', items: 'Figma, Postman, Trello' },
+        { category: 'Bahasa', items: 'Bahasa Indonesia (Utama) & Inggris (Profesional)' }
+    ]
 };
 
 let cvData = {};
