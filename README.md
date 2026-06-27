@@ -23,8 +23,10 @@ A modern, fast, and professional ATS-friendly CV/Resume builder that generates p
 Proyek ini telah direfaktor untuk pemisahan kode (*separation of concerns*) yang lebih baik:
 
 ```
-├── index.html   # Struktur markup HTML inti & metadata SEO
-├── style.css    # Gaya tata letak (flex/grid), media query responsif, & media cetak A4
+├── index.html   # Landing page marketing (hero, CTA, dan link GitHub)
+├── app.css      # Styling khusus landing page
+├── app.html     # Halaman aplikasi CV builder
+├── style.css    # Styling khusus builder (layout, responsive, media cetak A4)
 └── script.js    # Logika model data default, autosave, rendering form, & algoritma pembagi halaman
 ```
 
@@ -32,10 +34,11 @@ Proyek ini telah direfaktor untuk pemisahan kode (*separation of concerns*) yang
 
 ## ⚙️ Cara Menggunakan
 
-1. **Jalankan Aplikasi**: Cukup buka file `index.html` di browser pilihan Anda (Google Chrome, Microsoft Edge, Firefox, atau Safari).
-2. **Isi Formulir**: Mulai isi data diri Anda dari "Informasi Pribadi", "Ringkasan Profil", hingga "Keahlian". Anda dapat menambah atau menghapus entri riwayat serta poin detail (*bullets*) secara dinamis.
-3. **Atur Skala & Bahasa**: Gunakan tombol zoom di kanan bawah untuk memperbesar pratinjau lembar. Pilih preferensi bahasa tajuk di pojok kanan atas.
-4. **Unduh PDF**: Klik tombol **Generate PDF** (atau tekan `Ctrl + P`) -> pilih opsi cetak "Save as PDF" -> pastikan ukuran kertas diatur ke **A4** dengan **Margin: None/Minimum** dan aktifkan opsi **Background graphics** agar pratinjau cetak maksimal.
+1. **Buka Landing Page**: Jalankan `index.html` untuk melihat landing page.
+2. **Masuk ke Builder**: Klik tombol **Get Started** atau buka langsung `app.html`.
+3. **Isi Formulir**: Mulai isi data diri Anda dari "Informasi Pribadi", "Ringkasan Profil", hingga "Keahlian". Anda dapat menambah atau menghapus entri riwayat serta poin detail (*bullets*) secara dinamis.
+4. **Atur Skala & Bahasa**: Gunakan tombol zoom di kanan bawah untuk memperbesar pratinjau lembar. Pilih preferensi bahasa tajuk di pojok kanan atas.
+5. **Unduh PDF**: Klik tombol **Generate PDF** (atau tekan `Ctrl + P`) -> pilih opsi cetak "Save as PDF" -> pastikan ukuran kertas diatur ke **A4** dengan **Margin: None/Minimum** dan aktifkan opsi **Background graphics** agar pratinjau cetak maksimal.
 
 ---
 
@@ -61,5 +64,5 @@ Untuk mencegah bagian kiri halaman terpotong saat di-zoom, pratinjau menggunakan
 
 ## 👨‍💻 Kontributor & Credit
 
-- **Pengembang**: Mohamad Haidar
-- **CV Contoh**: [Unduh Contoh CV PDF](CV-Mohamad Haidar.pdf)
+- **Pengembang**: Rezal Suryadi Putra
+- **CV Contoh**: [Unduh Contoh CV PDF](CV-Rezal Suryadi Putra.pdf)

@@ -9,12 +9,27 @@
 
 html { height: 100%; }
 
+:root {
+    --bg-900: #0f172a;
+    --bg-800: #1e293b;
+    --bg-700: #334155;
+    --bg-650: #273549;
+    --text-100: #f1f5f9;
+    --text-200: #e2e8f0;
+    --text-300: #cbd5e1;
+    --text-400: #94a3b8;
+    --text-500: #64748b;
+    --accent-500: #3b82f6;
+    --accent-600: #2563eb;
+    --accent-soft: #60a5fa;
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 14px;
     line-height: 1.5;
-    color: #e2e8f0;
-    background: #0f172a;
+    color: var(--text-200);
+    background: var(--bg-900);
     height: 100%;
     overflow: hidden;
 }
@@ -33,8 +48,8 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 12px 24px;
-    background: #1e293b;
-    border-bottom: 1px solid #334155;
+    background: var(--bg-800);
+    border-bottom: 1px solid var(--bg-700);
     flex-shrink: 0;
     position: relative;
     z-index: 900;
@@ -46,7 +61,7 @@ body {
     gap: 10px;
     font-size: 18px;
     font-weight: 700;
-    color: #f1f5f9;
+    color: var(--text-100);
 }
 
 .topbar-brand svg {
@@ -59,7 +74,7 @@ body {
     display: none;
     background: transparent;
     border: none;
-    color: #94a3b8;
+    color: var(--text-400);
     cursor: pointer;
     padding: 4px;
     align-items: center;
@@ -68,7 +83,7 @@ body {
     transition: color 0.15s ease;
 }
 .burger-menu-btn:hover {
-    color: #f1f5f9;
+    color: var(--text-100);
 }
 .burger-menu-btn svg {
     width: 24px;
@@ -80,8 +95,8 @@ body {
     display: none;
     flex-direction: column;
     gap: 16px;
-    background: #1e293b;
-    border-bottom: 1px solid #334155;
+    background: var(--bg-800);
+    border-bottom: 1px solid var(--bg-700);
     padding: 20px 24px;
     position: absolute;
     top: 100%;
@@ -97,7 +112,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: #94a3b8;
+    color: var(--text-400);
     font-size: 13px;
 }
 .topbar-menu-dropdown .menu-item select {
@@ -116,14 +131,14 @@ body {
 
 .topbar-actions .save-indicator {
     font-size: 12px;
-    color: #64748b;
+    color: var(--text-500);
     margin-right: 6px;
 }
 
 .lang-select {
-    background: #1e293b;
-    color: #e2e8f0;
-    border: 1px solid #334155;
+    background: var(--bg-800);
+    color: var(--text-200);
+    border: 1px solid var(--bg-700);
     border-radius: 8px;
     padding: 8px 12px;
     font-size: 13px;
@@ -134,11 +149,11 @@ body {
     transition: all 0.15s ease;
 }
 .lang-select:hover {
-    border-color: #475569;
-    background: #273549;
+    border-color: var(--text-500);
+    background: var(--bg-650);
 }
 .lang-select:focus {
-    border-color: #3b82f6;
+    border-color: var(--accent-500);
 }
 
 .btn {
@@ -156,10 +171,10 @@ body {
 }
 
 .btn-primary {
-    background: #3b82f6;
+    background: var(--accent-500);
     color: #fff;
 }
-.btn-primary:hover { background: #2563eb; }
+.btn-primary:hover { background: var(--accent-600); }
 
 .btn-danger {
     background: #1e293b;
@@ -170,10 +185,10 @@ body {
 
 .btn-ghost {
     background: transparent;
-    color: #94a3b8;
-    border: 1px solid #334155;
+    color: var(--text-400);
+    border: 1px solid var(--bg-700);
 }
-.btn-ghost:hover { background: #334155; color: #e2e8f0; }
+.btn-ghost:hover { background: var(--bg-700); color: var(--text-200); }
 
 .panels {
     display: flex;
@@ -187,8 +202,8 @@ body {
 .editor-panel {
     width: 480px;
     min-width: 380px;
-    background: #1e293b;
-    border-right: 1px solid #334155;
+    background: var(--bg-800);
+    border-right: 1px solid var(--bg-700);
     overflow-y: auto;
     padding: 20px;
     flex-shrink: 0;
@@ -196,8 +211,8 @@ body {
 
 /* Credit Banner */
 .credit-banner {
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: var(--bg-900);
+    border: 1px solid var(--bg-700);
     border-radius: 12px;
     padding: 12px 16px;
     margin-bottom: 16px;
@@ -205,19 +220,19 @@ body {
     justify-content: space-between;
     align-items: center;
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--text-400);
 }
 .credit-banner span {
     font-weight: 600;
 }
 .credit-link {
-    color: #3b82f6;
+    color: var(--accent-500);
     text-decoration: none;
     font-weight: 600;
     transition: color 0.15s ease;
 }
 .credit-link:hover {
-    color: #60a5fa;
+    color: var(--accent-soft);
     text-decoration: underline;
 }
 
@@ -228,14 +243,14 @@ body {
     background: transparent;
 }
 .editor-panel::-webkit-scrollbar-thumb {
-    background: #475569;
+    background: var(--text-500);
     border-radius: 3px;
 }
 
 /* Section Cards */
 .form-section {
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: var(--bg-900);
+    border: 1px solid var(--bg-700);
     border-radius: 12px;
     margin-bottom: 16px;
     overflow: hidden;
@@ -250,14 +265,60 @@ body {
     user-select: none;
     transition: background 0.15s;
 }
-.form-section-header:hover { background: #1e293b; }
+.form-section-header:hover { background: var(--bg-800); }
 
 .form-section-title {
     font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: #94a3b8;
+    color: var(--text-400);
+}
+
+.form-section-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-title-edit-btn {
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: all 0.15s ease;
+}
+
+.form-section-header:hover .section-title-edit-btn,
+.section-title-edit-btn:focus {
+    opacity: 1;
+}
+
+.section-title-edit-btn:hover {
+    background: #273549;
+    color: #e2e8f0;
+}
+
+.section-title-editor {
+    display: none;
+    padding: 10px 16px 8px 16px;
+    border-top: 1px dashed #334155;
+    background: rgba(30, 41, 59, 0.45);
+}
+
+.section-title-editor.active {
+    display: block;
+}
+
+.section-title-reset-btn {
+    margin-top: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
 }
 
 .form-section-toggle {
@@ -319,6 +380,28 @@ body {
     gap: 10px;
 }
 .form-row .form-group { flex: 1; }
+
+.form-toggle-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+}
+
+.form-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #cbd5e1;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.form-toggle-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #3b82f6;
+}
 
 /* Entry Cards (repeated items) */
 .entry-card {

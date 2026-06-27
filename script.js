@@ -4,6 +4,21 @@
 
 const DEFAULT_DATA = {
     language: 'id',
+    customSectionTitles: {
+        education: '',
+        workExperience: '',
+        relatedExperiences: '',
+        certifications: '',
+        awards: '',
+        skills: ''
+    },
+    sectionTitleStyle: {
+        color: '#1a1a1a',
+        fontSizePt: '13',
+        borderWidthPx: '2',
+        uppercase: true,
+        bold: true
+    },
     header: {
         name: 'Nama Kamu',
         email: 'email@example.com',
@@ -67,6 +82,7 @@ const DEFAULT_DATA = {
 };
 
 let cvData = {};
+let isEditorInputBound = false;
 
 /* =================================================================
    LOCALSTORAGE
@@ -88,11 +104,47 @@ function loadData() {
         const saved = localStorage.getItem('ats_cv_data');
         if (saved) {
             cvData = JSON.parse(saved);
-            if (!cvData.language) cvData.language = 'id';
+            normalizeCvData();
             return true;
         }
     } catch (e) { /* ignore parse errors */ }
     return false;
+}
+
+function normalizeCvData() {
+    if (!cvData.language) cvData.language = 'id';
+
+    const defaultTitles = DEFAULT_DATA.customSectionTitles;
+    if (!cvData.customSectionTitles || typeof cvData.customSectionTitles !== 'object') {
+        cvData.customSectionTitles = JSON.parse(JSON.stringify(defaultTitles));
+    } else {
+        Object.keys(defaultTitles).forEach((key) => {
+            if (typeof cvData.customSectionTitles[key] !== 'string') {
+                cvData.customSectionTitles[key] = '';
+            }
+        });
+    }
+
+    const defaultStyle = DEFAULT_DATA.sectionTitleStyle;
+    if (!cvData.sectionTitleStyle || typeof cvData.sectionTitleStyle !== 'object') {
+        cvData.sectionTitleStyle = JSON.parse(JSON.stringify(defaultStyle));
+    } else {
+        if (typeof cvData.sectionTitleStyle.color !== 'string' || !cvData.sectionTitleStyle.color.trim()) {
+            cvData.sectionTitleStyle.color = defaultStyle.color;
+        }
+        if (typeof cvData.sectionTitleStyle.fontSizePt !== 'string' || !cvData.sectionTitleStyle.fontSizePt.trim()) {
+            cvData.sectionTitleStyle.fontSizePt = defaultStyle.fontSizePt;
+        }
+        if (typeof cvData.sectionTitleStyle.borderWidthPx !== 'string' || !cvData.sectionTitleStyle.borderWidthPx.trim()) {
+            cvData.sectionTitleStyle.borderWidthPx = defaultStyle.borderWidthPx;
+        }
+        if (typeof cvData.sectionTitleStyle.uppercase !== 'boolean') {
+            cvData.sectionTitleStyle.uppercase = defaultStyle.uppercase;
+        }
+        if (typeof cvData.sectionTitleStyle.bold !== 'boolean') {
+            cvData.sectionTitleStyle.bold = defaultStyle.bold;
+        }
+    }
 }
 
 /* =================================================================
@@ -112,7 +164,7 @@ function renderForm() {
     const editor = document.getElementById('editorPanel');
     editor.innerHTML = `
         <div class="credit-banner">
-            <span>© Mohamad Haidar</span>
+            <span>© Rezal Suryadi Putra</span>
             <a href="CV-Mohamad Haidar.pdf" target="_blank" class="credit-link">
                 Unduh PDF CV Contoh
             </a>
@@ -127,7 +179,10 @@ function renderForm() {
         ${renderSkillsForm()}
     `;
     // Attach input listeners using event delegation
-    editor.addEventListener('input', handleFormInput);
+    if (!isEditorInputBound) {
+        editor.addEventListener('input', handleFormInput);
+        isEditorInputBound = true;
+    }
 }
 
 function renderHeaderForm() {
@@ -182,12 +237,41 @@ function renderSummaryForm() {
     </div>`;
 }
 
+function getEditorSectionLabel(sectionKey, fallbackLabel) {
+    const custom = (cvData.customSectionTitles?.[sectionKey] || '').trim();
+    return custom || fallbackLabel;
+}
+
+function renderEditableSectionHeader(sectionKey, fallbackLabel) {
+    const currentLabel = getEditorSectionLabel(sectionKey, fallbackLabel);
+    const customValue = cvData.customSectionTitles?.[sectionKey] || '';
+    return `
+        <div class="form-section-header" onclick="toggleSection(this)">
+            <div class="form-section-title-row">
+                <span class="form-section-title">${esc(currentLabel)}</span>
+                <button class="section-title-edit-btn" type="button" onclick="toggleSectionTitleEditor(event, '${sectionKey}')" title="Edit judul section">✎</button>
+            </div>
+            <span class="form-section-toggle">▾</span>
+        </div>
+        <div class="section-title-editor" id="sectionTitleEditor-${sectionKey}" onclick="event.stopPropagation()">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Ubah Judul Section</label>
+                    <input class="form-input" data-field="customSectionTitles.${sectionKey}" value="${esc(customValue)}" placeholder="${esc(fallbackLabel)}">
+                </div>
+            </div>
+            <button class="btn btn-ghost section-title-reset-btn" type="button" onclick="resetSectionTitle(event, '${sectionKey}')">Hapus Custom</button>
+        </div>
+    `;
+}
+
 function renderEducationForm() {
+    const sectionLabel = getEditorSectionLabel('education', 'Pendidikan');
     const items = cvData.education;
     let cards = items.map((item, i) => `
         <div class="entry-card">
             <div class="entry-card-header">
-                <span class="entry-card-num">Pendidikan ${i + 1}</span>
+                <span class="entry-card-num">${esc(sectionLabel)} ${i + 1}</span>
                 <button class="btn-remove" onclick="removeEntry('education', ${i})" title="Hapus">✕</button>
             </div>
             <div class="form-row">
@@ -218,22 +302,20 @@ function renderEducationForm() {
     `).join('');
     return `
     <div class="form-section" data-section="education">
-        <div class="form-section-header" onclick="toggleSection(this)">
-            <span class="form-section-title">Pendidikan</span>
-            <span class="form-section-toggle">▾</span>
-        </div>
+        ${renderEditableSectionHeader('education', 'Pendidikan')}
         <div class="form-section-body">
             ${cards}
-            <button class="btn-add" onclick="addEntry('education')">+ Tambah Pendidikan</button>
+            <button class="btn-add" onclick="addEntry('education')">+ Tambah ${esc(sectionLabel)}</button>
         </div>
     </div>`;
 }
 
 function renderExperienceCards(sectionKey, items, label) {
+    const sectionLabel = getEditorSectionLabel(sectionKey, label);
     let cards = items.map((item, i) => `
         <div class="entry-card">
             <div class="entry-card-header">
-                <span class="entry-card-num">${label} ${i + 1}</span>
+                <span class="entry-card-num">${esc(sectionLabel)} ${i + 1}</span>
                 <button class="btn-remove" onclick="removeEntry('${sectionKey}', ${i})" title="Hapus">✕</button>
             </div>
             <div class="form-row">
@@ -264,13 +346,10 @@ function renderExperienceCards(sectionKey, items, label) {
     `).join('');
     return `
     <div class="form-section" data-section="${sectionKey}">
-        <div class="form-section-header" onclick="toggleSection(this)">
-            <span class="form-section-title">${label}</span>
-            <span class="form-section-toggle">▾</span>
-        </div>
+        ${renderEditableSectionHeader(sectionKey, label)}
         <div class="form-section-body">
             ${cards}
-            <button class="btn-add" onclick="addEntry('${sectionKey}')">+ Tambah ${label}</button>
+            <button class="btn-add" onclick="addEntry('${sectionKey}')">+ Tambah ${esc(sectionLabel)}</button>
         </div>
     </div>`;
 }
@@ -284,11 +363,12 @@ function renderRelatedExperiencesForm() {
 }
 
 function renderCertificationsForm() {
+    const sectionLabel = getEditorSectionLabel('certifications', 'Sertifikasi');
     const items = cvData.certifications;
     let cards = items.map((item, i) => `
         <div class="entry-card">
             <div class="entry-card-header">
-                <span class="entry-card-num">Sertifikasi ${i + 1}</span>
+                <span class="entry-card-num">${esc(sectionLabel)} ${i + 1}</span>
                 <button class="btn-remove" onclick="removeEntry('certifications', ${i})" title="Hapus">✕</button>
             </div>
             <div class="form-group">
@@ -309,18 +389,16 @@ function renderCertificationsForm() {
     `).join('');
     return `
     <div class="form-section" data-section="certifications">
-        <div class="form-section-header" onclick="toggleSection(this)">
-            <span class="form-section-title">Sertifikasi</span>
-            <span class="form-section-toggle">▾</span>
-        </div>
+        ${renderEditableSectionHeader('certifications', 'Sertifikasi')}
         <div class="form-section-body">
             ${cards}
-            <button class="btn-add" onclick="addEntry('certifications')">+ Tambah Sertifikasi</button>
+            <button class="btn-add" onclick="addEntry('certifications')">+ Tambah ${esc(sectionLabel)}</button>
         </div>
     </div>`;
 }
 
 function renderAwardsForm() {
+    const sectionLabel = getEditorSectionLabel('awards', 'Penghargaan');
     const items = cvData.awards;
     let rows = items.map((item, i) => `
         <div class="bullet-row">
@@ -330,18 +408,16 @@ function renderAwardsForm() {
     `).join('');
     return `
     <div class="form-section" data-section="awards">
-        <div class="form-section-header" onclick="toggleSection(this)">
-            <span class="form-section-title">Penghargaan</span>
-            <span class="form-section-toggle">▾</span>
-        </div>
+        ${renderEditableSectionHeader('awards', 'Penghargaan')}
         <div class="form-section-body">
             ${rows}
-            <button class="btn-add" onclick="addEntry('awards')">+ Tambah Penghargaan</button>
+            <button class="btn-add" onclick="addEntry('awards')">+ Tambah ${esc(sectionLabel)}</button>
         </div>
     </div>`;
 }
 
 function renderSkillsForm() {
+    const sectionLabel = getEditorSectionLabel('skills', 'Skills');
     const items = cvData.skills;
     let cards = items.map((item, i) => `
         <div class="entry-card">
@@ -363,13 +439,10 @@ function renderSkillsForm() {
     `).join('');
     return `
     <div class="form-section" data-section="skills">
-        <div class="form-section-header" onclick="toggleSection(this)">
-            <span class="form-section-title">Skills</span>
-            <span class="form-section-toggle">▾</span>
-        </div>
+        ${renderEditableSectionHeader('skills', 'Skills')}
         <div class="form-section-body">
             ${cards}
-            <button class="btn-add" onclick="addEntry('skills')">+ Tambah Kategori Skill</button>
+            <button class="btn-add" onclick="addEntry('skills')">+ Tambah ${esc(sectionLabel)}</button>
         </div>
     </div>`;
 }
@@ -394,7 +467,8 @@ function handleFormInput(e) {
     if (!field) return;
 
     const parts = field.split('.');
-    setNestedValue(cvData, parts, el.value);
+    const value = el.type === 'checkbox' ? el.checked : el.value;
+    setNestedValue(cvData, parts, value);
     renderPreview();
     saveData();
 }
@@ -463,6 +537,31 @@ function toggleSection(headerEl) {
     headerEl.parentElement.classList.toggle('collapsed');
 }
 
+function toggleSectionTitleEditor(event, sectionKey) {
+    event.stopPropagation();
+    const editor = document.getElementById(`sectionTitleEditor-${sectionKey}`);
+    if (!editor) return;
+
+    editor.classList.toggle('active');
+    if (editor.classList.contains('active')) {
+        const input = editor.querySelector('input[data-field]');
+        if (input) {
+            input.focus();
+            input.select();
+        }
+    }
+}
+
+function resetSectionTitle(event, sectionKey) {
+    event.stopPropagation();
+    if (!cvData.customSectionTitles) return;
+
+    cvData.customSectionTitles[sectionKey] = '';
+    renderForm();
+    renderPreview();
+    saveData();
+}
+
 /* =================================================================
    MULTI-LANGUAGE HEADERS DICTIONARY
    ================================================================= */
@@ -485,6 +584,33 @@ const SECTION_HEADERS = {
     }
 };
 
+const SECTION_KEYS = ['education', 'workExperience', 'relatedExperiences', 'certifications', 'awards', 'skills'];
+
+function getResolvedSectionHeaders() {
+    const lang = cvData.language || 'id';
+    const defaults = SECTION_HEADERS[lang] || SECTION_HEADERS.id;
+    const custom = cvData.customSectionTitles || {};
+    const headers = {};
+
+    SECTION_KEYS.forEach((key) => {
+        const customValue = typeof custom[key] === 'string' ? custom[key].trim() : '';
+        headers[key] = customValue || defaults[key];
+    });
+
+    return headers;
+}
+
+function getSectionTitleStyleInline() {
+    const style = cvData.sectionTitleStyle || DEFAULT_DATA.sectionTitleStyle;
+    const fontSize = Math.min(18, Math.max(10, parseInt(style.fontSizePt, 10) || 13));
+    const borderWidth = Math.min(4, Math.max(1, parseInt(style.borderWidthPx, 10) || 2));
+    const color = /^#[0-9a-fA-F]{6}$/.test(style.color) ? style.color : '#1a1a1a';
+    const textTransform = style.uppercase ? 'uppercase' : 'none';
+    const fontWeight = style.bold ? '700' : '600';
+
+    return `font-size:${fontSize}pt;color:${color};border-bottom:${borderWidth}px solid ${color};text-transform:${textTransform};font-weight:${fontWeight};`;
+}
+
 function changeLanguage(lang) {
     cvData.language = lang;
     
@@ -494,6 +620,7 @@ function changeLanguage(lang) {
     const langSelectDropdown = document.getElementById('langSelectDropdown');
     if (langSelectDropdown) langSelectDropdown.value = lang;
 
+    renderForm();
     renderPreview();
     saveData();
 }
@@ -542,17 +669,16 @@ function renderPreview() {
         html += `<p class="cv-summary">${esc(cvData.summary)}</p>`;
     }
 
-    // Headers translation
-    const lang = cvData.language || 'id';
-    const headers = SECTION_HEADERS[lang] || SECTION_HEADERS.id;
+    const headers = getResolvedSectionHeaders();
+    const sectionTitleStyleInline = getSectionTitleStyleInline();
 
     // Sections
-    html += renderPreviewSection(headers.education, cvData.education, 'edu');
-    html += renderPreviewSection(headers.workExperience, cvData.workExperience, 'exp');
-    html += renderPreviewSection(headers.relatedExperiences, cvData.relatedExperiences, 'exp');
-    html += renderPreviewCertifications(headers.certifications);
-    html += renderPreviewAwards(headers.awards);
-    html += renderPreviewSkills(headers.skills);
+    html += renderPreviewSection(headers.education, cvData.education, 'edu', sectionTitleStyleInline);
+    html += renderPreviewSection(headers.workExperience, cvData.workExperience, 'exp', sectionTitleStyleInline);
+    html += renderPreviewSection(headers.relatedExperiences, cvData.relatedExperiences, 'exp', sectionTitleStyleInline);
+    html += renderPreviewCertifications(headers.certifications, sectionTitleStyleInline);
+    html += renderPreviewAwards(headers.awards, sectionTitleStyleInline);
+    html += renderPreviewSkills(headers.skills, sectionTitleStyleInline);
 
     tempDiv.innerHTML = html;
     document.body.appendChild(tempDiv);
@@ -633,14 +759,14 @@ function renderPreview() {
     applyZoom();
 }
 
-function renderPreviewSection(title, items, type) {
+function renderPreviewSection(title, items, type, sectionTitleStyleInline) {
     const validItems = items.filter(item => {
         if (type === 'edu') return item.institution || item.degree;
         return item.company || item.role;
     });
     if (!validItems.length) return '';
 
-    let html = `<div class="cv-section-title">${title}</div>`;
+    let html = `<div class="cv-section-title" style="${sectionTitleStyleInline}">${esc(title)}</div>`;
     validItems.forEach(item => {
         const mainTitle = type === 'edu' ? item.institution : item.company;
         const subtitle = type === 'edu' ? item.degree : item.role;
@@ -662,10 +788,10 @@ function renderPreviewSection(title, items, type) {
     return html;
 }
 
-function renderPreviewCertifications(title) {
+function renderPreviewCertifications(title, sectionTitleStyleInline) {
     const valid = cvData.certifications.filter(c => c.name);
     if (!valid.length) return '';
-    let html = `<div class="cv-section-title">${title}</div>`;
+    let html = `<div class="cv-section-title" style="${sectionTitleStyleInline}">${esc(title)}</div>`;
     valid.forEach(c => {
         html += `<div class="cv-entry">
             <div class="cv-entry-header">
@@ -680,18 +806,18 @@ function renderPreviewCertifications(title) {
     return html;
 }
 
-function renderPreviewAwards(title) {
+function renderPreviewAwards(title, sectionTitleStyleInline) {
     const valid = cvData.awards.filter(a => a.trim());
     if (!valid.length) return '';
-    let html = `<div class="cv-section-title">${title}</div>
+    let html = `<div class="cv-section-title" style="${sectionTitleStyleInline}">${esc(title)}</div>
         <div class="cv-entry"><ul>${valid.map(a => `<li>${esc(a)}</li>`).join('')}</ul></div>`;
     return html;
 }
 
-function renderPreviewSkills(title) {
+function renderPreviewSkills(title, sectionTitleStyleInline) {
     const valid = cvData.skills.filter(s => s.category || s.items);
     if (!valid.length) return '';
-    let html = `<div class="cv-section-title">${title}</div>
+    let html = `<div class="cv-section-title" style="${sectionTitleStyleInline}">${esc(title)}</div>
         <div class="cv-entry"><ul class="cv-skills-list">`;
     valid.forEach(s => {
         if (s.category && s.items) {
